@@ -12,7 +12,7 @@ class Sticky extends Component {
     state = {
         isSticky: false,
         wasSticky: false,
-        style: {},
+        childClass: 'js-react-not-sticky',
     };
 
     componentDidMount() {
@@ -62,11 +62,11 @@ class Sticky extends Component {
                 this.placeholderRef.current.offsetTop;
         }
 
-        const placeholderClientRect = this.placeholderRef.current.getBoundingClientRect();
+        // const placeholderClientRect = this.placeholderRef.current.getBoundingClientRect();
         const calculatedHeight = this.contentRef.current.getBoundingClientRect().height;
 
-        const bottomDifference =
-            distanceFromBottom - bottomOffset - calculatedHeight;
+        // const bottomDifference =
+        //     distanceFromBottom - bottomOffset - calculatedHeight;
 
         const wasSticky = !!isSticky && setAsSticky;
         const sticky = setAsSticky && preventingStickyStateChanges
@@ -79,19 +79,7 @@ class Sticky extends Component {
                 ? parent.scrollHeight - parent.scrollTop
                 : distanceFromBottom) - calculatedHeight;
 
-        const style = !isSticky
-            ? {}
-            : {
-                  position: 'fixed',
-                  top:
-                      bottomDifference > 0
-                          ? relative
-                              ? parent.offsetTop - parent.offsetParent.scrollTop
-                              : 0
-                          : bottomDifference,
-                  left: placeholderClientRect.left,
-                  width: placeholderClientRect.width,
-              };
+        const childClass = !isSticky ? 'js-not-sticky' : 'js-is-sticky';
 
         this.setState({
             isSticky: sticky,
@@ -99,17 +87,17 @@ class Sticky extends Component {
             distanceFromTop,
             distanceFromBottom,
             calculatedHeight,
-            style,
+            childClass,
         });
     };
 
     render() {
         const { children, className } = this.props;
-        const { style } = this.state;
+        const { childClass } = this.state;
 
         const element = Children.only(React.cloneElement(children, {
                 ...children.props,
-                style,
+                className: `${children.props.className || ''} ${childClass}`,
                 ref: this.contentRef,
             })
         );
