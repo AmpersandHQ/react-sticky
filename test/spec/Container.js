@@ -7,6 +7,7 @@ const attachTo = document.getElementById("mount");
 
 describe("StickyContainer", () => {
   let container, containerNode;
+
   beforeEach(() => {
     container = mount(<StickyContainer />, { attachTo });
     containerNode = container.node;
@@ -14,6 +15,7 @@ describe("StickyContainer", () => {
 
   describe("getChildContext", () => {
     let childContext;
+
     beforeEach(() => {
       childContext = containerNode.getChildContext();
     });
