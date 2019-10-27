@@ -1,12 +1,14 @@
-import React from "react";
-import { expect } from "chai";
-import { mount } from "enzyme";
-import { StickyContainer, Sticky } from "../../src";
+/* global describe it beforeEach */
+/* eslint-disable react/display-name */
+import React from 'react';
+import { expect } from 'chai';
+import { mount } from 'enzyme';
+import { StickyContainer, Sticky } from '../../src';
 
-const attachTo = document.getElementById("mount");
+const attachTo = document.getElementById('mount');
 
-describe("Invalid Sticky", () => {
-  it("should complain if Sticky child is not a function", () => {
+describe('Invalid Sticky', () => {
+  it('should complain if Sticky child is not a function', () => {
     expect(() =>
       mount(
         <StickyContainer>
@@ -17,21 +19,21 @@ describe("Invalid Sticky", () => {
     ).to.throw(TypeError);
   });
 
-  it("should complain if StickyContainer is not found", () => {
+  it('should complain if StickyContainer is not found', () => {
     expect(() =>
       mount(<Sticky>{() => <div />}</Sticky>, { attachTo })
     ).to.throw(TypeError);
   });
 });
 
-describe("Valid Sticky", () => {
+describe('Valid Sticky', () => {
   const componentFactory = props => (
     <StickyContainer>
       <Sticky {...props} />
     </StickyContainer>
   );
 
-  describe("lifecycle", () => {
+  describe('lifecycle', () => {
     let container;
     beforeEach(() => {
       container = mount(componentFactory({ children: () => <div /> }), {
@@ -39,28 +41,28 @@ describe("Valid Sticky", () => {
       });
     });
 
-    it("should register as subscriber of parent on mount", () => {
-      expect(container.node.subscribers).to.contain(
-        container.children().node.handleContainerEvent
+    it('should register as subscriber of parent on mount', () => {
+      expect(container.getDOMNode().subscribers).to.contain(
+        container.children().getDOMNode().handleContainerEvent
       );
     });
 
-    it("should unregister as subscriber of parent on unmount", () => {
-      expect(container.node.subscribers).to.contain(
-        container.children().node.handleContainerEvent
+    it('should unregister as subscriber of parent on unmount', () => {
+      expect(container.getDOMNode().subscribers).to.contain(
+        container.children().getDOMNode().handleContainerEvent
       );
       mount(<StickyContainer />, { attachTo });
-      expect(container.node.subscribers).to.be.empty;
+      expect(container.getDOMNode().subscribers).to.be.empty;
     });
   });
 
-  describe("with no props", () => {
+  describe('with no props', () => {
     const expectedStickyStyle = {
       left: 10,
       top: 0,
       width: 100,
-      position: "fixed",
-      transform: "translateZ(0)"
+      position: 'fixed',
+      transform: 'translateZ(0)'
     };
 
     let sticky;
@@ -73,12 +75,10 @@ describe("Valid Sticky", () => {
       );
 
       const {
-        position,
-        transform,
         ...boundingClientRect
       } = expectedStickyStyle;
 
-      sticky = wrapper.children().node;
+      sticky = wrapper.children().getDOMNode();
       sticky.content.getBoundingClientRect = () => ({
         ...boundingClientRect,
         height: 100
@@ -89,7 +89,7 @@ describe("Valid Sticky", () => {
       });
     });
 
-    it("should change have an expected start state", () => {
+    it('should change have an expected start state', () => {
       expect(sticky.state).to.eql({
         isSticky: false,
         wasSticky: false,
@@ -97,7 +97,7 @@ describe("Valid Sticky", () => {
       });
     });
 
-    it("should be sticky when distanceFromTop is 0", () => {
+    it('should be sticky when distanceFromTop is 0', () => {
       sticky.handleContainerEvent({
         distanceFromTop: 0,
         distanceFromBottom: 1000,
@@ -114,7 +114,7 @@ describe("Valid Sticky", () => {
       expect(parseInt(sticky.placeholder.style.paddingBottom)).to.equal(100);
     });
 
-    it("should be sticky when distanceFromTop is negative", () => {
+    it('should be sticky when distanceFromTop is negative', () => {
       sticky.handleContainerEvent({
         distanceFromTop: -1,
         distanceFromBottom: 999,
@@ -131,7 +131,7 @@ describe("Valid Sticky", () => {
       expect(parseInt(sticky.placeholder.style.paddingBottom)).to.equal(100);
     });
 
-    it("should continue to be sticky when distanceFromTop becomes increasingly negative", () => {
+    it('should continue to be sticky when distanceFromTop becomes increasingly negative', () => {
       sticky.handleContainerEvent({
         distanceFromTop: -1,
         distanceFromBottom: 999,
@@ -153,7 +153,7 @@ describe("Valid Sticky", () => {
       expect(parseInt(sticky.placeholder.style.paddingBottom)).to.equal(100);
     });
 
-    it("should cease to be sticky when distanceFromTop becomes greater than 0", () => {
+    it('should cease to be sticky when distanceFromTop becomes greater than 0', () => {
       sticky.handleContainerEvent({
         distanceFromTop: -1,
         distanceFromBottom: 999,
@@ -167,7 +167,7 @@ describe("Valid Sticky", () => {
       expect(sticky.state).to.eql({
         isSticky: false,
         wasSticky: true,
-        style: { transform: "translateZ(0)" },
+        style: { transform: 'translateZ(0)' },
         distanceFromTop: 1,
         distanceFromBottom: 901,
         calculatedHeight: 100
@@ -175,7 +175,7 @@ describe("Valid Sticky", () => {
       expect(parseInt(sticky.placeholder.style.paddingBottom)).to.equal(0);
     });
 
-    it("should compensate sticky style height when distanceFromBottom is < 0", () => {
+    it('should compensate sticky style height when distanceFromBottom is < 0', () => {
       sticky.handleContainerEvent({
         distanceFromTop: -901,
         distanceFromBottom: 99,
@@ -193,8 +193,8 @@ describe("Valid Sticky", () => {
     });
   });
 
-  describe("with topOffset not equal to 0", () => {
-    it("should attach lazily when topOffset is positive", () => {
+  describe('with topOffset not equal to 0', () => {
+    it('should attach lazily when topOffset is positive', () => {
       const wrapper = mount(
         componentFactory({
           topOffset: 1,
@@ -203,7 +203,7 @@ describe("Valid Sticky", () => {
         { attachTo }
       );
 
-      const sticky = wrapper.children().node;
+      const sticky = wrapper.children().getDOMNode();
       sticky.handleContainerEvent({
         distanceFromTop: 0,
         distanceFromBottom: 100,
@@ -218,7 +218,7 @@ describe("Valid Sticky", () => {
       expect(sticky.state.isSticky).to.be.true;
     });
 
-    it("should attach aggressively when topOffset is negative", () => {
+    it('should attach aggressively when topOffset is negative', () => {
       const wrapper = mount(
         componentFactory({
           topOffset: -1,
@@ -227,7 +227,7 @@ describe("Valid Sticky", () => {
         { attachTo }
       );
 
-      const sticky = wrapper.children().node;
+      const sticky = wrapper.children().getDOMNode();
       sticky.handleContainerEvent({
         distanceFromTop: 2,
         distanceFromBottom: 99,
@@ -243,7 +243,7 @@ describe("Valid Sticky", () => {
     });
   });
 
-  describe("when relative = true", () => {
+  describe('when relative = true', () => {
     let eventSource, sticky;
     beforeEach(() => {
       const wrapper = mount(
@@ -254,15 +254,15 @@ describe("Valid Sticky", () => {
         { attachTo }
       );
 
-      eventSource = wrapper.node.node;
+      eventSource = wrapper.getDOMNode().getDOMNode();
       eventSource.scrollHeight = 1000;
       eventSource.offsetTop = 0;
       eventSource.offsetParent = { scrollTop: 0 };
 
-      sticky = wrapper.children().node;
+      sticky = wrapper.children().getDOMNode();
     });
 
-    it("should not change sticky state when event source is not StickyContainer", () => {
+    it('should not change sticky state when event source is not StickyContainer', () => {
       sticky.placeholder.offsetTop = 0;
       eventSource.scrollTop = 0;
 
@@ -281,7 +281,7 @@ describe("Valid Sticky", () => {
       expect(sticky.state.isSticky).to.be.true;
     });
 
-    it("should change sticky state when event source is StickyContainer", () => {
+    it('should change sticky state when event source is StickyContainer', () => {
       sticky.placeholder.offsetTop = 1;
       eventSource.scrollTop = 0;
 
@@ -309,7 +309,7 @@ describe("Valid Sticky", () => {
       expect(sticky.state.isSticky).to.be.true;
     });
 
-    it("should adjust sticky style.top when StickyContainer has a negative distanceFromTop", () => {
+    it('should adjust sticky style.top when StickyContainer has a negative distanceFromTop', () => {
       sticky.placeholder.offsetTop = 0;
       eventSource.scrollTop = 0;
 
@@ -341,8 +341,8 @@ describe("Valid Sticky", () => {
     });
   });
 
-  describe("with disableHardwareAcceleration = true", () => {
-    it("should not include translateZ style when sticky", () => {
+  describe('with disableHardwareAcceleration = true', () => {
+    it('should not include translateZ style when sticky', () => {
       const wrapper = mount(
         componentFactory({
           disableHardwareAcceleration: true,
@@ -351,7 +351,7 @@ describe("Valid Sticky", () => {
         { attachTo }
       );
 
-      const sticky = wrapper.children().node;
+      const sticky = wrapper.children().getDOMNode();
       sticky.handleContainerEvent({
         distanceFromTop: 1,
         distanceFromBottom: 100,
@@ -370,8 +370,8 @@ describe("Valid Sticky", () => {
     });
   });
 
-  describe("with disableCompensation = true", () => {
-    it("should not include translateZ style when sticky", () => {
+  describe('with disableCompensation = true', () => {
+    it('should not include translateZ style when sticky', () => {
       const wrapper = mount(
         componentFactory({
           disableCompensation: true,
@@ -380,7 +380,7 @@ describe("Valid Sticky", () => {
         { attachTo }
       );
 
-      const sticky = wrapper.children().node;
+      const sticky = wrapper.children().getDOMNode();
       sticky.handleContainerEvent({
         distanceFromTop: -1,
         distanceFromBottom: 99,
