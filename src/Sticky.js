@@ -6,6 +6,7 @@ export default class Sticky extends Component {
         topOffset: PropTypes.number,
         bottomOffset: PropTypes.number,
         relative: PropTypes.bool,
+        setAsSticky: PropTypes.bool,
         children: PropTypes.func,
     };
 
@@ -13,6 +14,7 @@ export default class Sticky extends Component {
         relative: false,
         topOffset: 0,
         bottomOffset: 0,
+        setAsSticky: true,
         disableCompensation: false,
         disableHardwareAcceleration: false,
         children: () => {},
