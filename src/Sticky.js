@@ -65,7 +65,8 @@ export default class Sticky extends Component {
             setAsSticky,
             disableHardwareAcceleration,
             topOffset,
-            bottomOffset
+            bottomOffset,
+            topPos,
         } = this.props;
         const { isSticky } = this.state;
 
@@ -99,16 +100,17 @@ export default class Sticky extends Component {
                 ? parent.scrollHeight - parent.scrollTop
                 : distanceFromBottom) - calculatedHeight;
 
+        const top = bottomDifference > 0
+            ? relative
+                ? parent.offsetTop - parent.offsetParent.scrollTop
+                : topPos || 0
+            : bottomDifference;
+
         const style = !sticky
             ? {}
             : {
                   position: 'fixed',
-                  top:
-                      bottomDifference > 0
-                          ? relative
-                              ? parent.offsetTop - parent.offsetParent.scrollTop
-                              : 0
-                          : bottomDifference,
+                  top,
                   left: placeholderClientRect.left,
                   width: placeholderClientRect.width,
               };
@@ -132,9 +134,6 @@ export default class Sticky extends Component {
             this.props.children({
                 isSticky: this.state.isSticky,
                 wasSticky: this.state.wasSticky,
-                distanceFromTop: this.state.distanceFromTop,
-                distanceFromBottom: this.state.distanceFromBottom,
-                calculatedHeight: this.state.calculatedHeight,
                 style: this.state.style,
             }),
             {

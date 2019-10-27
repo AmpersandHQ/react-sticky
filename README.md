@@ -191,6 +191,10 @@ app.js
 
 Allows the user to determine if the 'sticky' functionality can be turned on/off on a per-element basis. Useful for if you only want something to be sticky at a given point, e.g. only when scrolling down or up a page.
 
+#### topPos _(default: 0)_
+
+Fix the `top` position to something other than 0 if the element needs to be shifted down, e.g. if it needs to stick underneath other sticky elements.
+
 ## FAQ
 
 ### I get errors while using React.Fragments
