@@ -1,8 +1,11 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, createRef } from 'react';
 import PropTypes from 'prop-types';
 import raf from 'raf';
+import events from '../constants/eventTypes';
 
 export default class Container extends PureComponent {
+    parent = createRef();
+
     static childContextTypes = {
         subscribe: PropTypes.func,
         unsubscribe: PropTypes.func,
@@ -16,16 +19,6 @@ export default class Container extends PureComponent {
             getParent: this.getParent,
         };
     }
-
-    events = [
-        'resize',
-        'scroll',
-        'touchstart',
-        'touchmove',
-        'touchend',
-        'pageshow',
-        'load',
-    ];
 
     subscribers = [];
 
@@ -47,7 +40,7 @@ export default class Container extends PureComponent {
 
             this.rafHandle = raf(() => {
                 this.framePending = false;
-                const { top, bottom } = this.node.getBoundingClientRect();
+                const { top, bottom } = this.parent.current.getBoundingClientRect();
 
                 this.subscribers.forEach(handler =>
                     handler({
@@ -56,7 +49,7 @@ export default class Container extends PureComponent {
                         eventSource:
                             currentTarget === window
                                 ? document.body
-                                : this.node,
+                                : this.parent.current,
                     })
                 );
             });
@@ -64,12 +57,14 @@ export default class Container extends PureComponent {
         }
     };
 
-    getParent = () => this.node;
+    getParent = () => this.parent.current;
 
     componentDidMount() {
-        this.events.forEach(event =>
-            window.addEventListener(event, this.notifySubscribers)
-        );
+        if (this.props.enableSticky) {
+            events.forEach(event =>
+                window.addEventListener(event, this.notifySubscribers)
+            );
+        }
     }
 
     componentWillUnmount() {
@@ -78,7 +73,7 @@ export default class Container extends PureComponent {
             this.rafHandle = null;
         }
 
-        this.events.forEach(event =>
+        events.forEach(event =>
             window.removeEventListener(event, this.notifySubscribers)
         );
     }
@@ -87,7 +82,7 @@ export default class Container extends PureComponent {
         return (
             <div
                 {...this.props}
-                ref={node => (this.node = node)}
+                ref={node => (this.parent.current = node)}
                 onScroll={this.notifySubscribers}
                 onTouchStart={this.notifySubscribers}
                 onTouchMove={this.notifySubscribers}
