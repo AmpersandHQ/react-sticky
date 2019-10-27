@@ -79,9 +79,21 @@ export default class Container extends PureComponent {
     }
 
     render() {
+        const {
+            // remove some props from the list of props passed to the div
+            // so React doesn't throw an error of
+            // 'React does not recognize the {prop} prop on a DOM element.'
+            /* eslint-disable no-unused-vars */
+            enableSticky,
+            distanceFromBottom,
+            distanceFromTop,
+            /* eslint-enable no-unused-vars */
+            ...rest
+        } = this.props;
+
         return (
             <div
-                {...this.props}
+                {...rest}
                 className={this.props.className}
                 ref={node => (this.parent.current = node)}
                 onScroll={this.notifySubscribers}
