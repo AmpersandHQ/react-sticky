@@ -1,24 +1,31 @@
-require("@babel/register")();
+/* global global require */
+require('@babel/register')();
 
-const jsdom = require("jsdom").jsdom;
+import '@babel/polyfill';
+import { configure } from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
 
-const exposedProperties = ["window", "navigator", "document"];
+configure({ adapter: new Adapter() });
 
-global.document = jsdom("");
+const jsdom = require('jsdom').jsdom;
+
+const exposedProperties = ['window', 'navigator', 'document'];
+
+global.document = jsdom('');
 global.window = document.defaultView;
 Object.keys(document.defaultView).forEach(property => {
-  if (typeof global[property] === "undefined") {
+  if (typeof global[property] === 'undefined') {
     exposedProperties.push(property);
     global[property] = document.defaultView[property];
   }
 });
 
 global.navigator = {
-  userAgent: "node.js"
+  userAgent: 'node.js'
 };
 
 documentRef = document;
 
-const mount = document.createElement("div");
-mount.id = "mount";
+const mount = document.createElement('div');
+mount.id = 'mount';
 document.body.appendChild(mount);
