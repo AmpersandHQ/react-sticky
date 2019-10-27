@@ -67,6 +67,10 @@ export default class Sticky extends Component {
         } = this.props;
         const { isSticky } = this.state;
 
+        if (!setAsSticky) {
+            return null;
+        }
+
         let preventingStickyStateChanges = false;
         if (relative) {
             preventingStickyStateChanges = eventSource !== parent;
@@ -111,7 +115,7 @@ export default class Sticky extends Component {
             style.transform = 'translateZ(0)';
         }
 
-        this.setState({
+        return this.setState({
             isSticky: sticky,
             wasSticky,
             distanceFromTop,
@@ -137,7 +141,7 @@ export default class Sticky extends Component {
         );
 
         return (
-            <div>
+            <div className="js-react-sticky">
                 <div ref={placeholder => (this.refPlaceholder.current = placeholder)} />
                 {element}
             </div>

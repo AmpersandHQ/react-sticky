@@ -60,7 +60,7 @@ export default class Container extends PureComponent {
     getParent = () => this.parent.current;
 
     componentDidMount() {
-        if (this.props.enableSticky) {
+        if (typeof window !== 'undefined' && this.props.enableSticky) {
             events.forEach(event =>
                 window.addEventListener(event, this.notifySubscribers)
             );
@@ -82,12 +82,12 @@ export default class Container extends PureComponent {
         return (
             <div
                 {...this.props}
+                className={this.props.className}
                 ref={node => (this.parent.current = node)}
                 onScroll={this.notifySubscribers}
                 onTouchStart={this.notifySubscribers}
                 onTouchMove={this.notifySubscribers}
-                onTouchEnd={this.notifySubscribers}
-            />
+                onTouchEnd={this.notifySubscribers} />
         );
     }
 }
