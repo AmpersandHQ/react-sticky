@@ -2,7 +2,7 @@
 
 Make your React components sticky!
 
-#### Update No longer actively maintained:	
+#### Update No longer actively maintained:
 
 The 6.0.3 release is the last release maintained. This means we will not be considering any PR's and/or responding to any issues until a new maintainer is identified. It is *highly* recommended that you begin transitioning to another sticky library to ensure better support and sustainability. This is obviously less than ideal - sorry for any inconvenience!
 
@@ -52,6 +52,7 @@ The majority of use cases will only need the style to pass to the DOM, but some 
 * `distanceFromTop` _(number)_ - number of pixels from the top of the `Sticky` to the nearest `StickyContainer`'s top
 * `distanceFromBottom` _(number)_ - number of pixels from the bottom of the `Sticky` to the nearest `StickyContainer`'s bottom
 * `calculatedHeight` _(number)_ - height of the element returned by this function
+* `enableSticky` _(boolean)_ - Allows the sticky functionality to be enabled or disabled as necessary.
 
 The `Sticky`'s child function will be called when events occur in the parent `StickyContainer`,
 and will serve as the callback to apply your own logic and customizations, with sane `style` attributes
@@ -185,6 +186,14 @@ app.js
   ...
 </StickyContainer>
 ```
+
+#### setAsSticky _(default: true)_
+
+Allows the user to determine if the 'sticky' functionality can be turned on/off on a per-element basis. Useful for if you only want something to be sticky at a given point, e.g. only when scrolling down or up a page.
+
+#### topPos _(default: 0)_
+
+Fix the `top` position to something other than 0 if the element needs to be shifted down, e.g. if it needs to stick underneath other sticky elements.
 
 ## FAQ
 
