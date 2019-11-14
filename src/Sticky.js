@@ -73,7 +73,10 @@ export default class Sticky extends Component {
         const { isSticky } = this.state;
 
         if (!setAsSticky) {
-            return null;
+            return this.setState({
+                isSticky: false,
+                style: {},
+            });
         }
 
         let preventingStickyStateChanges = false;
