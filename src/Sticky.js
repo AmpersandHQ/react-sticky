@@ -74,7 +74,7 @@ export default class Sticky extends Component {
         const defaultStyles = {
             top: 0,
             transform: disableHardwareAcceleration ? 'translateZ(0)' : '',
-        }
+        };
 
         if (!setAsSticky) {
             return this.setState({
