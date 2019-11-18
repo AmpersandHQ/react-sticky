@@ -75,7 +75,10 @@ export default class Sticky extends Component {
         if (!setAsSticky) {
             return this.setState({
                 isSticky: false,
-                style: {},
+                style: {
+                    top: 0,
+                    transform: disableHardwareAcceleration ? 'translateZ(0)' : '',
+                },
             });
         }
 
@@ -118,6 +121,8 @@ export default class Sticky extends Component {
                   top,
                   left: placeholderClientRect.left,
                   width: placeholderClientRect.width,
+                  maxHeight: '100vh',
+                  overflowY: 'auto',
               };
 
         if (!disableHardwareAcceleration) {
