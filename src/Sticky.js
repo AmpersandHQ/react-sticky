@@ -71,11 +71,15 @@ export default class Sticky extends Component {
             topPos,
         } = this.props;
         const { isSticky } = this.state;
+        const defaultStyles = {
+            top: 0,
+            transform: disableHardwareAcceleration ? 'translateZ(0)' : '',
+        };
 
         if (!setAsSticky) {
             return this.setState({
                 isSticky: false,
-                style: {},
+                style: defaultStyles,
             });
         }
 
@@ -97,7 +101,7 @@ export default class Sticky extends Component {
         const wasSticky = !!isSticky;
         const sticky = setAsSticky && preventingStickyStateChanges
             ? wasSticky
-            : distanceFromTop <= -topOffset &&
+            : distanceFromTop <= -(topOffset - topPos) &&
               distanceFromBottom > -bottomOffset;
 
         distanceFromBottom =
@@ -112,12 +116,14 @@ export default class Sticky extends Component {
             : bottomDifference;
 
         const style = !sticky
-            ? {}
+            ? defaultStyles
             : {
                   position: 'fixed',
                   top,
                   left: placeholderClientRect.left,
                   width: placeholderClientRect.width,
+                  maxHeight: topPos ? `calc(100vh - ${topPos}px)` : '100vh',
+                  overflowY: 'auto',
               };
 
         if (!disableHardwareAcceleration) {
@@ -148,7 +154,8 @@ export default class Sticky extends Component {
 
         return (
             <div className="js-react-sticky">
-                <div ref={placeholder => (this.refPlaceholder.current = placeholder)} />
+                <div className="js-react-sticky-placeholder"
+                     ref={placeholder => (this.refPlaceholder.current = placeholder)} />
                 {element}
             </div>
         );

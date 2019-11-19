@@ -1,6 +1,6 @@
 {
   "name": "@ampersandhq/react-sticky",
-  "version": "7.0.1",
+  "version": "7.0.2",
   "description": "Sticky component for React",
   "main": "lib/index.js",
   "scripts": {
